@@ -57,7 +57,7 @@ module Clique
           elsif !(oneMissing - tabu).empty?
             # Elección de los elementos a intercambiar
             # swap = [fuera del clique, en clique]
-            swap = ls.operatorSWAP(problem, clique)
+            swap = ls.operatorSWAP(matrix, clique)
             # SWAP
             clique.delete(swap.last)
             clique << swap.first

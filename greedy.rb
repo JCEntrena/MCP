@@ -27,16 +27,21 @@ module Clique
       while !possible.empty?
 
         # Number of connections of each vertex.
-        connections = possible.map{|x| [adjacencies(matrix, x), x]}
+        connections = possible.map{|x| [adjacencies(x, matrix), x]}
+        # Max by adjacencies, pick vertex.
         element = connections.max[1]
 
         # Add new element to clique, delete from possible.
-        clique << element+1
-        possible.delete(element)
+        clique << element
+        #possible.delete(element)
 
         # Delete vertices not connected to new one.
-        possible.delete_if {|x| matrix[x][element] == 0}
+        #possible.delete_if {|x| matrix[x][element] == 0}
+        possible = connected_with_all(clique, matrix)
       end
+
+      # Adjust clique, for indexes
+      clique.map!{|x| x+1}
 
       puts "Clique:"
       puts clique.sort

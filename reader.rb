@@ -4,6 +4,7 @@
 require 'singleton'
 require_relative 'problem.rb'
 require_relative 'greedy.rb'
+require_relative 'ils.rb'
 
 module Clique
 
@@ -42,6 +43,10 @@ module Clique
             matrix[j][i] = 1
           end
         end
+        # Each node is connected to itself.
+        matrix.length.times do |i|
+          matrix[i][i] = 1
+        end
         problem = Problem.new(item, size, edges, matrix)
         @problems << problem
 
@@ -56,8 +61,10 @@ module Clique
 
     def main
       readerMethod
-      @solver = Greedy.new
-      @solver.solve(@problems.first)
+      @solver = ILS.new
+      tiempo = Time.now
+      @solver.solve(@problems.first, 20)
+      print "Tiempo = " + (Time.now - tiempo).to_s
     end
   end
 

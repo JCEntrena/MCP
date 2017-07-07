@@ -3,8 +3,6 @@
 
 # Algorithms used for calculations in this project.
 
-require_relative 'localsearch.rb'
-
 include Clique
 
 module Algorithm
@@ -48,21 +46,6 @@ module Algorithm
     nodes = (0...matrix.size).to_a
     nodes.select!{|y| connections(y, list, matrix) == (list.length - 1)}
     nodes
-  end
-
-  # Completes a clique using LS
-  # Extends clique with operator ADD until no more vertices can be added.
-  # Uses random addition, as used in operatorADD.
-  def complete_clique(clique, matrix)
-    ls = LocalSearch.new
-    aux = Array.new(clique)
-    element = ls.operatorADD(matrix, aux)
-    until element.nil?
-      aux << element
-      element = ls.operatorADD(matrix, aux)
-    end
-
-    aux
   end
 
 end

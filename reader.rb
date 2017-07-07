@@ -64,6 +64,7 @@ module Clique
       @solver = ILS.new
       tiempo = Time.now
       @solver.solve(@problems.first, 20)
+      @solver.solve(@problems.last, 20)
       print "Tiempo = " + (Time.now - tiempo).to_s
     end
   end

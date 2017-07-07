@@ -12,12 +12,15 @@ module Clique
   class ILS
 
     def solve(problem, iterations)
+      # Initial declarations
       ls = LocalSearch.new
       matrix = problem.adjacencyMatrix
       nVert = problem.nVertices
       vertices = (0...nVert).to_a
       # Random
       @ran = Random.new(28)
+      # Limit for LS loop. Only used on swaps
+      limit = nVert / 3
       # Initial clique, empty at first.
       clique = []
       best_clique = []
@@ -41,9 +44,11 @@ module Clique
         pAdditions = connected_with_all(clique, matrix)
         oneMissing = missing_one_connection(clique, matrix)
         tabu = []
+        index = 0
 
         # Stopping when no additions or swaps could be made.
-        until pAdditions.empty? and (oneMissing - tabu).empty?
+        # TODO: Hay que establecer un límite, no puede estar haciendo SWAPs eternamente. Problema sobre todo en grafos grandes.
+        until (pAdditions.empty? and (oneMissing - tabu).empty?) or index > limit
           if !(pAdditions - tabu).empty?
             # Elección del elemento a añadir: en este caso, tomamos el que tiene más adyacencias.
             element = (pAdditions - tabu).max_by{|x| adjacencies(x, matrix)}
@@ -58,6 +63,8 @@ module Clique
             clique << swap.first
             # Forbid node to be added again.
             tabu << swap.last
+            # Incrementing index.
+            index += 1
 
           elsif !pAdditions.empty?
             # Nuevamente elemento con más adyacencias, pero permitimos tabú.
@@ -72,11 +79,10 @@ module Clique
 
           pAdditions = connected_with_all(clique, matrix)
           oneMissing = missing_one_connection(clique, matrix)
-
         end
 
       end
-
+      # Printing issues
       best_clique.map!{|x| x+1}
 
       puts 'Clique'

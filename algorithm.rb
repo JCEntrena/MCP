@@ -18,13 +18,17 @@ module Algorithm
 
   # Gives number of connections of a node to a list of nodes
   def connections(node, list, matrix)
-    list.inject(0) {|sum, element| sum + matrix[node][element]}
+    list.inject(0){|sum, element| sum + matrix[node][element]}
   end
 
   # Check if a node is connected to all the nodes from a list.
   # Compares total sum of adjacencies to list size.
   def is_connected(node, list, matrix)
-    list.count {|i| matrix[node][i] == 1} == list.size
+    list.count{|i| matrix[node][i] == 1} == list.size
+  end
+
+  def is_connected_but_one(node, list, matrix)
+    list.count{|i| matrix[node][i] == 1} == list.size - 1
   end
 
   # Returns all nodes connected with given one, as a list of indexes.
@@ -44,8 +48,17 @@ module Algorithm
   # Used for getting the set of all nodes connected to a clique except for one
   def missing_one_connection(list, matrix)
     nodes = (0...matrix.size).to_a
-    nodes.select!{|y| connections(y, list, matrix) == (list.length - 1)}
+    nodes.select!{|y| is_connected_but_one(y, list, matrix)}
     nodes
+  end
+
+  # Value of a clique. Used in objective functions.
+  # Value = Size + |C_0| / (Size² + 1)
+  def value(clique, matrix)
+    # Get C_0
+    possible = connected_with_all(clique, matrix)
+    # Return value
+    clique.length + possible.length / (clique.length**2 + 1.0)
   end
 
 end

@@ -47,7 +47,7 @@ module Clique
         index = 0
 
         # Stopping when no additions or swaps could be made.
-        # TODO: Hay que establecer un límite, no puede estar haciendo SWAPs eternamente. Problema sobre todo en grafos grandes.
+        # TODO: Comprobar el límite. 
         until (pAdditions.empty? and (oneMissing - tabu).empty?) or index > limit
           if !(pAdditions - tabu).empty?
             # Elección del elemento a añadir: en este caso, tomamos el que tiene más adyacencias.

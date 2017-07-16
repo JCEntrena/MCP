@@ -15,6 +15,7 @@ module Clique
       @ran = Random.new(28)
     end
 
+    # Simple solver.
     def solve(problem, iterations)
       # Initial declarations
       matrix = problem.adjacencyMatrix
@@ -92,6 +93,7 @@ module Clique
     end
 
     # Second approach: Using more complex techniques.
+    # Simmulated annealing + matrix information.
     def solve2(problem, iterations)
       # Initial declarations
       matrix = problem.adjacencyMatrix

@@ -61,4 +61,14 @@ module Algorithm
     clique.length + possible.length / (clique.length**2 + 1.0)
   end
 
+  # Swap movement.
+  # Vertex is not in clique, connected to all but one nodes in clique.
+  # We add vertex, remove vertex not connected.
+  def swap(clique, vertex, matrix)
+    not_connected = clique.select{|x| matrix[x][vertex]}
+    aux = clique - not_connected
+    aux << vertex
+    aux
+  end
+
 end

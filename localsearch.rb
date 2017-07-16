@@ -64,6 +64,59 @@ module Clique
       clique.min_by{|vertex| connections(vertex, vertices, matrix)}
     end
 
+    # Idea from Katayama, Hamamoto, Narihisa
+    def solve_with_solution(problem, clique, changes)
+      matrix = problem.adjacencyMatrix
+      vertices = problem.nVertices
+      new_clique = Array.new(clique)
+      best_clique = Array.new(new_clique)
+      # Initial possible additions and one-missing vertices.
+      possible = (0...vertices).to_a
+      oneMissing = []
+      # Loop counter, tabu
+      index = 0
+      tabu = -1
+      # Loop
+      until index > changes
+        unless possible.empty?
+          vertex = possible.max_by{|element| connections(element, possible, matrix)}
+          new_clique << vertex
+          # Swap or drop
+        else
+          # Trying swap.
+          candidates = oneMissing.select{|element| aux = swap(new_clique, element, matrix);
+                                                   pa = connected_with_all(aux, matrix);
+                                                   pa.length > 0}
+          unless candidates.empty?
+            element = candidates.first
+            new_clique = swap(new_clique, element, matrix)
+          # Drop
+          else
+            element = operatorDROP(matrix, new_clique)
+            new_clique.delete(element)
+            tabu = element
+          end
+          index += 1
+        end
+        possible = connected_with_all(new_clique, matrix)
+        possible.delete(tabu)
+        oneMissing = missing_one_connection(new_clique, matrix)
+        # Change if necessary
+        if new_clique.length > best_clique.length
+          best_clique = Array.new(new_clique)
+        end
+      end
+      best_clique
+    end
+
+    def solve(problem, changes)
+      c = solve_with_solution(problem, [], changes)
+      c.map!{|x| x+1}
+      puts "Clique:"
+      puts c.sort
+      puts "Longitud: #{c.length}"
+    end
+
   end
 
 end

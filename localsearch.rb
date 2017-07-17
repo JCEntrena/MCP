@@ -84,12 +84,11 @@ module Clique
           # Swap or drop
         else
           # Trying swap.
-          candidates = oneMissing.select{|element| aux = swap(new_clique, element, matrix);
-                                                   pa = connected_with_all(aux, matrix);
-                                                   pa.length > 0}
-          unless candidates.empty?
-            element = candidates.first
-            new_clique = swap(new_clique, element, matrix)
+          # Uso find para una técnica del primer mejor. Así, ahorro calcular
+          candidate = oneMissing.find{|element| aux = swap(new_clique, element, matrix);
+                                                   one_connected_with_all(aux, matrix)}
+          unless candidate.nil?
+            new_clique = swap(new_clique, candidate, matrix)
           # Drop
           else
             element = operatorDROP(matrix, new_clique)
@@ -116,6 +115,62 @@ module Clique
       puts c.sort
       puts "Longitud: #{c.length}"
     end
+
+    # Segunda resolución de LS. Más rápida pero peor.
+    def solve2(problem, clique, changes)
+      # Definitions
+      matrix = problem.adjacencyMatrix
+      nVert = problem.nVertices
+      vertices = (0...nVert).to_a
+      my_clique = Array.new(clique)
+      best_clique = Array.new(clique)
+      # Initialize lists
+      pAdditions = connected_with_all(my_clique, matrix)
+      oneMissing = missing_one_connection(my_clique, matrix)
+      tabu = []
+      index = 0
+
+      # Stopping when no additions or swaps could be made.
+      # TODO: Comprobar el límite.
+      until (pAdditions.empty? and (oneMissing - tabu).empty?) or index > changes
+        if !(pAdditions - tabu).empty?
+          # Elección del elemento a añadir: en este caso, tomamos el que tiene más adyacencias.
+          element = (pAdditions - tabu).max_by{|x| adjacencies(x, matrix)}
+          my_clique << element
+
+        elsif !(oneMissing - tabu).empty?
+          # Elección de los elementos a intercambiar
+          # swap = [fuera del clique, en clique]
+          swap = operatorSWAP(matrix, my_clique)
+          # SWAP
+          my_clique.delete(swap.last)
+          my_clique << swap.first
+          # Forbid node to be added again.
+          tabu << swap.last
+          # Incrementing index.
+          index += 1
+
+        elsif !pAdditions.empty?
+          # Nuevamente elemento con más adyacencias, pero permitimos tabú.
+          element = pAdditions.max_by{|x| adjacencies(x, matrix)}
+          my_clique << element
+        end
+
+        # Copy if improves.
+        if my_clique.length > best_clique.length
+          best_clique = Array.new(my_clique)
+        end
+
+        pAdditions = connected_with_all(my_clique, matrix)
+        oneMissing = missing_one_connection(my_clique, matrix)
+        # Limit tabu size
+        tabu = tabu[0..nVert/10]
+      end
+
+      best_clique
+    end
+
+
 
   end
 

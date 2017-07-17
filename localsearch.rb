@@ -71,39 +71,42 @@ module Clique
       new_clique = Array.new(clique)
       best_clique = Array.new(new_clique)
       # Initial possible additions and one-missing vertices.
-      possible = (0...vertices).to_a
-      oneMissing = []
+      possible = connected_with_all(new_clique, matrix)
+      oneMissing = missing_one_connection(new_clique, matrix)
       # Loop counter, tabu
       index = 0
-      tabu = -1
+      tabu = []
       # Loop
       until index > changes
         unless possible.empty?
           vertex = possible.max_by{|element| connections(element, possible, matrix)}
           new_clique << vertex
+          tabu = []
           # Swap or drop
         else
           # Trying swap.
           # Uso find para una técnica del primer mejor. Así, ahorro calcular
-          candidate = oneMissing.find{|element| aux = swap(new_clique, element, matrix);
+          candidate = oneMissing.shuffle.find{|element| aux = swap(new_clique, element, matrix);
                                                    one_connected_with_all(aux, matrix)}
           unless candidate.nil?
-            new_clique = swap(new_clique, candidate, matrix)
+            new_clique = Array.new(swap(new_clique, candidate, matrix))
+            tabu = []
           # Drop
           else
             element = operatorDROP(matrix, new_clique)
             new_clique.delete(element)
-            tabu = element
+            tabu << element
           end
           index += 1
         end
         possible = connected_with_all(new_clique, matrix)
-        possible.delete(tabu)
+        possible -= tabu
         oneMissing = missing_one_connection(new_clique, matrix)
         # Change if necessary
         if new_clique.length > best_clique.length
           best_clique = Array.new(new_clique)
         end
+
       end
       best_clique
     end

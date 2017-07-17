@@ -20,7 +20,7 @@ module Clique
       # Random
       @ran = Random.new(28)
       # Limit for LS loop. Only used on swaps
-      limit = nVert / 3
+      limit = nVert / 2
       # Initial clique, empty at first.
       clique = []
       best_clique = []
@@ -47,11 +47,18 @@ module Clique
 
       end
       # Printing issues
+      puts "¿Es clique? #{is_clique(best_clique, matrix)}"
       best_clique.map!{|x| x+1}
 
       puts 'Clique'
       puts best_clique.sort
-      puts "Longitud: #{clique.length}"
+      puts "Longitud: #{best_clique.length}"
+
+      #best_clique.each do |x|
+      #  best_clique.each do |y|
+      #    puts matrix[x][y]
+      #  end
+      #end
 
     end
 

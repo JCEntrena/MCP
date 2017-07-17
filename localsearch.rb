@@ -86,7 +86,7 @@ module Clique
         else
           # Trying swap.
           # Uso find para una técnica del primer mejor. Así, ahorro calcular
-          candidate = oneMissing.shuffle.find{|element| aux = swap(new_clique, element, matrix);
+          candidate = oneMissing.shuffle(random: Random.new(index)).find{|element| aux = swap(new_clique, element, matrix);
                                                    one_connected_with_all(aux, matrix)}
           unless candidate.nil?
             new_clique = Array.new(swap(new_clique, candidate, matrix))
@@ -113,7 +113,7 @@ module Clique
 
     def solve(problem, changes)
       c = solve_with_solution(problem, [], changes)
-      puts "¿Es clique? #{is_clique(best_clique, matrix)}"
+      puts "¿Es clique? #{is_clique(c, problem.adjacencyMatrix)}"
       c.map!{|x| x+1}
       puts "Clique:"
       puts c.sort

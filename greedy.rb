@@ -31,7 +31,7 @@ module Clique
         possible = connected_with_all(clique, matrix)
       end
 
-      puts "¿Es clique? #{is_clique(best_clique, matrix)}"
+      puts "¿Es clique? #{is_clique(clique, matrix)}"
       # Adjust clique, for indexes
       clique.map!{|x| x+1}
 
@@ -57,9 +57,16 @@ module Clique
       max_swaps = 2 * vertices
       last_swap = -1
 
-      # Loop
+      # Until swaps start, just adding vertices.
+      start_swap.times do |i|
+        clique << possible.max_by{|x| connections(x, possible, matrix)}
+        possible = connected_with_all(clique, matrix)
+        break if possible.empty?
+      end
+
+      # Loop unitl no more additions can be done
       until possible.empty?
-        if index < start_swap or swaps > max_swaps
+        if swaps > max_swaps
           clique << possible.max_by{|x| connections(x, possible, matrix)}
         else
           neighbourhood = possible + oneMissing - [last_swap]
@@ -68,7 +75,7 @@ module Clique
           clique << element
           # Delete if swap, update tabu.
           unless possible.include?(element)
-            not_connected = clique.select{|x| matrix[x][element] == 0}.first
+            not_connected = clique.find{|x| matrix[x][element] == 0}
             clique.delete(not_connected)
             last_swap = not_connected
             swaps += 1
@@ -76,10 +83,9 @@ module Clique
         end
         possible = connected_with_all(clique, matrix)
         oneMissing = missing_one_connection(clique, matrix)
-        index += 1
       end
 
-      puts "¿Es clique? #{is_clique(best_clique, matrix)}"
+      puts "¿Es clique? #{is_clique(clique, matrix)}"
       # Adjust clique, for indexes
       clique.map!{|x| x+1}
 

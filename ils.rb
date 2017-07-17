@@ -13,7 +13,7 @@ module Clique
 
     def solve(problem, iterations)
       # Initial declarations
-      ls = LocalSearch.new
+      @ls = LocalSearch.new
       matrix = problem.adjacencyMatrix
       nVert = problem.nVertices
       vertices = (0...nVert).to_a
@@ -24,8 +24,6 @@ module Clique
       # Initial clique, empty at first.
       clique = []
       best_clique = []
-      # Tabu list. For swapping.
-      tabu = []
 
       # Repeat 'iterations' times.
       iterations.times do
@@ -39,46 +37,12 @@ module Clique
         clique.delete_if{|x| matrix[x][rvertex] == 0}
         clique << rvertex
 
-        # Algorithm
+        # LS Algorithm
         # Initialize lists
-        pAdditions = connected_with_all(clique, matrix)
-        oneMissing = missing_one_connection(clique, matrix)
-        tabu = []
-        index = 0
+        clique = @ls.solve_with_solution(problem, clique, limit)
 
-        # Stopping when no additions or swaps could be made.
-        # TODO: Comprobar el límite. 
-        until (pAdditions.empty? and (oneMissing - tabu).empty?) or index > limit
-          if !(pAdditions - tabu).empty?
-            # Elección del elemento a añadir: en este caso, tomamos el que tiene más adyacencias.
-            element = (pAdditions - tabu).max_by{|x| adjacencies(x, matrix)}
-            clique << element
-
-          elsif !(oneMissing - tabu).empty?
-            # Elección de los elementos a intercambiar
-            # swap = [fuera del clique, en clique]
-            swap = ls.operatorSWAP(matrix, clique)
-            # SWAP
-            clique.delete(swap.last)
-            clique << swap.first
-            # Forbid node to be added again.
-            tabu << swap.last
-            # Incrementing index.
-            index += 1
-
-          elsif !pAdditions.empty?
-            # Nuevamente elemento con más adyacencias, pero permitimos tabú.
-            element = pAdditions.max_by{|x| adjacencies(x, matrix)}
-            clique << element
-          end
-
-          # Copy if improves.
-          if clique.length > best_clique.length
-            best_clique = Array.new(clique)
-          end
-
-          pAdditions = connected_with_all(clique, matrix)
-          oneMissing = missing_one_connection(clique, matrix)
+        if clique.length > best_clique.length
+          best_clique = Array.new(clique)
         end
 
       end
@@ -87,6 +51,7 @@ module Clique
 
       puts 'Clique'
       puts best_clique.sort
+      puts "Longitud: #{clique.length}"
 
     end
 

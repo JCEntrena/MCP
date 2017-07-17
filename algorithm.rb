@@ -52,6 +52,17 @@ module Algorithm
     nodes
   end
 
+  # Returns true if exists a node connected to all of the list
+  def one_connected_with_all(list, matrix)
+    nodes = (0...matrix.size).to_a
+    nodes.each do |x|
+      if list.all?{|y| matrix[x][y] == 1}
+        return true
+      end
+    end
+    false
+  end
+
   # Value of a clique. Used in objective functions.
   # Value = Size + |C_0| / (Size² + 1)
   def value(clique, matrix)

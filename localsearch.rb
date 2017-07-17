@@ -113,6 +113,7 @@ module Clique
 
     def solve(problem, changes)
       c = solve_with_solution(problem, [], changes)
+      puts "¿Es clique? #{is_clique(best_clique, matrix)}"
       c.map!{|x| x+1}
       puts "Clique:"
       puts c.sort

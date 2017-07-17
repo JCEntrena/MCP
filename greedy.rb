@@ -31,6 +31,7 @@ module Clique
         possible = connected_with_all(clique, matrix)
       end
 
+      puts "¿Es clique? #{is_clique(best_clique, matrix)}"
       # Adjust clique, for indexes
       clique.map!{|x| x+1}
 
@@ -78,6 +79,7 @@ module Clique
         index += 1
       end
 
+      puts "¿Es clique? #{is_clique(best_clique, matrix)}"
       # Adjust clique, for indexes
       clique.map!{|x| x+1}
 

@@ -83,6 +83,7 @@ module Clique
 
       end
 
+      puts "¿Es clique? #{is_clique(best_clique, matrix)}"
       # Adjust clique, for indexes
       best_clique.map!{|x| x+1}
 

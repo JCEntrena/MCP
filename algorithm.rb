@@ -55,6 +55,7 @@ module Algorithm
   # Returns true if exists a node connected to all of the list
   def one_connected_with_all(list, matrix)
     nodes = (0...matrix.size).to_a
+    nodes -= list
     nodes.each do |x|
       if list.all?{|y| matrix[x][y] == 1}
         return true
@@ -76,10 +77,22 @@ module Algorithm
   # Vertex is not in clique, connected to all but one nodes in clique.
   # We add vertex, remove vertex not connected.
   def swap(clique, vertex, matrix)
-    not_connected = clique.select{|x| matrix[x][vertex]}
-    aux = clique - not_connected
+    not_connected = clique.select{|x| matrix[x][vertex] == 0}
+    aux = Array.new(clique)
+    aux = aux - not_connected
     aux << vertex
     aux
   end
 
+  # Basic checking method.
+  def is_clique(list, matrix)
+    list.each do |x|
+      list.each do |y|
+        if matrix[x][y] == 0
+          return false
+        end
+      end
+    end
+    true
+  end
 end

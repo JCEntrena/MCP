@@ -45,7 +45,7 @@ module Clique
     # Loop
       iterations.times do
         solution = generate_random_solution(problem)
-        solution = @ls.solve_with_solution(problem, solution, Math.sqrt(nVert).to_i)
+        solution = @ls.solve_with_solution(problem, solution, nVert/2)
         if solution.length > best_clique.length
           best_clique = Array.new(solution)
         end

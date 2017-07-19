@@ -12,6 +12,10 @@ module Clique
 
     public
 
+    def initialize
+      @rand = Random.new(28)
+    end
+
     # Greedy approach to the clique problem.
     # Starting with L = []
     # We choose those indexes with a max amount of connections, connected to all of L, and a random one of those, adding it to L
@@ -64,7 +68,7 @@ module Clique
         break if possible.empty?
       end
 
-      # Loop unitl no more additions can be done
+      # Loop until no more additions can be done
       until possible.empty?
         if swaps > max_swaps
           clique << possible.max_by{|x| connections(x, possible, matrix)}
@@ -108,6 +112,25 @@ module Clique
       end
 
       aux
+    end
+
+
+    # Greedy adding random vertex.
+    # Mainly for generating initial solution, to be used in other heuristics.
+    def solve_random(problem)
+      matrix = problem.adjacencyMatrix
+      vertices = problem.nVertices
+      # Defining clique elements and initial list of possible vertices: [0, 1, _ , vertices-1]
+      clique = []
+      possible = (0...vertices).to_a
+
+      until possible.empty?
+        # Add new element to clique, delete from possible.
+        clique << possible[@rand.rand(possible.length)]
+        # Update possible.
+        possible = connected_with_all(clique, matrix)
+      end
+      clique
     end
 
   end

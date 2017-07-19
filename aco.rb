@@ -102,13 +102,13 @@ module Clique
       nEdges = problem.nEdges
       vertices = (0...nVert).to_a
       # Pheromone, all starting at the same value.
-      pheromone = Array.new(nVert, 1.0/nVert)
+      pheromone = Array.new(nVert, 10)
       # Decreasing pheromone factor, number of ants.
-      beta = 0.95
+      beta = 0.9
       nAnts = 50
       # Decreasing temperature factor
       temperature = 1
-      gamma = 0.9
+      gamma = 0.925
       # Initial clique, empty at first.
       clique = []
       best_clique = []

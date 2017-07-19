@@ -61,7 +61,7 @@ module Clique
     def operatorDROP(matrix, clique)
       vertices = (0...matrix.length).to_a
       # Return node in the clique with less connections overall.
-      clique.min_by{|vertex| connections(vertex, vertices, matrix)}
+      clique.min_by{|vertex| adjacencies(vertex, matrix)}
     end
 
     # Idea from Katayama, Hamamoto, Narihisa
@@ -120,7 +120,7 @@ module Clique
       puts "Longitud: #{c.length}"
     end
 
-    # Segunda resolución de LS. Más rápida pero peor.
+    # Segunda resolución de LS. Peor y mucho más lenta.
     def solve2(problem, clique, changes)
       # Definitions
       matrix = problem.adjacencyMatrix
@@ -168,7 +168,7 @@ module Clique
         pAdditions = connected_with_all(my_clique, matrix)
         oneMissing = missing_one_connection(my_clique, matrix)
         # Limit tabu size
-        tabu = tabu[0..nVert/10]
+        tabu = tabu[0..nVert/50]
       end
 
       best_clique

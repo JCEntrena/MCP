@@ -99,10 +99,23 @@ module Clique
 
     end
 
+    # Completes a clique
+    # Extends clique until no more vertices can be added.
+    def complete_clique(clique, matrix)
+      aux = Array.new(clique)
+      element = connected_with_all(aux, matrix).max_by{|x| adjacencies(x, matrix)}
+      until element.nil?
+        aux << element
+        element = connected_with_all(aux, matrix).max_by{|x| adjacencies(x, matrix)}
+      end
+
+      aux
+    end
+
     # Completes a clique using LS
     # Extends clique with operator ADD until no more vertices can be added.
     # Uses random addition, as used in operatorADD.
-    def complete_clique(clique, matrix)
+    def complete_clique_random(clique, matrix)
       ls = LocalSearch.new
       aux = Array.new(clique)
       element = ls.operatorADD(matrix, aux)
@@ -134,7 +147,7 @@ module Clique
     end
 
     # Greedy repair
-    # Deletes nodes until a clique is reached. 
+    # Deletes nodes until a clique is reached.
     def repair(solution, matrix)
       aux = Array.new(solution)
       until is_clique(aux, matrix)

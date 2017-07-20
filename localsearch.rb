@@ -26,7 +26,7 @@ module Clique
 
       # Possible additions set (PA)
       # Using is_connected function, defined in algorithm.rb.
-      pAdditions = vertices.select{ |vertex| is_connected(vertex, clique, matrix) } - clique
+      pAdditions = connected_with_all(clique, matrix)
       # Check if empty
       if pAdditions.empty?
         return nil

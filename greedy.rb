@@ -133,6 +133,17 @@ module Clique
       clique
     end
 
+    # Greedy repair
+    # Deletes nodes until a clique is reached. 
+    def repair(solution, matrix)
+      aux = Array.new(solution)
+      until is_clique(aux, matrix)
+        element = aux.min_by{|x| adjacencies(x, matrix)}
+        aux.delete(element)
+      end
+      aux
+    end
+
   end
 
 end

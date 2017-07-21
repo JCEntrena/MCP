@@ -70,7 +70,7 @@ module Algorithm
     # Get C_0
     possible = connected_with_all(clique, matrix)
     # Return value
-    clique.length + possible.length / (clique.length**2 + 1.0)
+    clique.length + possible.length / (matrix.length * 1.0)
   end
 
   # Swap movement.

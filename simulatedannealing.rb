@@ -21,51 +21,46 @@ module Clique
       # Defining clique elements and initial list of possible vertices: [0, 1, _ , vertices-1]
       clique = []
       best_clique = []
-      cvalue = 0
-      best_value = 0
+      cvalue = Float::INFINITY
+      best_length = 0
       # Defining temperatures
       temperature = 1
       final_temperature = 0.01
       beta = 0.99
-
       # Possible additions an One Missing init
       pAdditions = (0...nVert).to_a
       oneMissing = []
-      index = 0
+      # Loop
       until temperature <= final_temperature
-        puts index
-        index += 1
-        neighbourhood = pAdditions + oneMissing
-        # Pick 30
-        # AJUSTAR
-        items = Array.new(neighbourhood)#.shuffle(random: @rand.rand())[0...30]
+        # Neighbourhood
+        neighbourhood = []
+        pAdditions.each{|x| neighbourhood << add(clique, x)}
+        oneMissing.each do |element|
+          not_connected = clique.find{|x| matrix[x][element] == 0}
+          neighbourhood << swap(clique, not_connected, element)
+        end
+        clique.each{|x| neighbourhood << drop(clique, x)}
+
+        neighbourhood.shuffle!(random: @rand.rand())
         # Loop
-        items.each do |element|
-          # Copy clique
-          copy = Array.new(clique)
-          copy << element
-          unless pAdditions.include?(element)
-            not_connected = copy.find{|x| matrix[x][element] == 0}
-            copy.delete(not_connected)
-          end
-          value = value(copy, matrix)
+        neighbourhood.each do |element|
+          value = value2(element, matrix) - value(element, matrix)
           # puts "Best: #{best_value}. Clique: #{cvalue}. Valor #{value}"
-          if value > cvalue
-            clique = Array.new(copy)
+          if value < cvalue
+            clique = Array.new(element)
             cvalue = value
             break
-          elsif @rand.rand() < Math.exp((value - cvalue)/temperature)
-            clique = Array.new(copy)
+          elsif @rand.rand() < Math.exp((cvalue - value)/temperature)
+            clique = Array.new(element)
             cvalue = value
             break
           end
 
         end
-        if cvalue > best_value
+        if best_length < clique.length
           best_clique = Array.new(clique)
-          best_value = cvalue
+          best_length = clique.length
         end
-
         pAdditions = connected_with_all(clique, matrix)
         oneMissing = missing_one_connection(clique, matrix)
 

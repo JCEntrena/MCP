@@ -3,6 +3,7 @@
 
 require_relative 'problem.rb'
 require_relative 'algorithm.rb'
+require_relative 'greedy.rb'
 
 include Algorithm
 
@@ -12,6 +13,7 @@ module Clique
 
     def initialize
       @rand = Random.new(28)
+      @greedy = Greedy.new
     end
 
     # Simple SA
@@ -39,7 +41,7 @@ module Clique
           neighbourhood << swap(clique, element, matrix)
         end
         clique.each{|x| neighbourhood << drop(clique, x)}
-
+        # Shuffle
         neighbourhood.shuffle!(random: @rand.rand())
         # Loop
         neighbourhood.each do |element|
@@ -65,6 +67,8 @@ module Clique
 
         temperature *= beta
       end
+
+      best_clique = @greedy.complete_clique(best_clique, matrix)
 
       puts "¿Es clique? #{is_clique(best_clique, matrix)}"
       # Adjust clique, for indexes

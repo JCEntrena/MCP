@@ -168,6 +168,7 @@ module Clique
             new_population += [parent1, parent2]
           end
         end
+
         population = Marshal.load(Marshal.dump(new_population))
         best = population.max_by{|x| x.length}
         # Get new best

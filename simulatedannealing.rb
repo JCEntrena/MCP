@@ -21,7 +21,7 @@ module Clique
       # Defining clique elements and initial list of possible vertices: [0, 1, _ , vertices-1]
       clique = []
       best_clique = []
-      cvalue = Float::INFINITY
+      cvalue = 0
       best_length = 0
       # Defining temperatures
       temperature = 1
@@ -36,21 +36,20 @@ module Clique
         neighbourhood = []
         pAdditions.each{|x| neighbourhood << add(clique, x)}
         oneMissing.each do |element|
-          not_connected = clique.find{|x| matrix[x][element] == 0}
-          neighbourhood << swap(clique, not_connected, element)
+          neighbourhood << swap(clique, element, matrix)
         end
         clique.each{|x| neighbourhood << drop(clique, x)}
 
         neighbourhood.shuffle!(random: @rand.rand())
         # Loop
         neighbourhood.each do |element|
-          value = value2(element, matrix) - value(element, matrix)
+          value = value(element, matrix)
           # puts "Best: #{best_value}. Clique: #{cvalue}. Valor #{value}"
-          if value < cvalue
+          if value > cvalue
             clique = Array.new(element)
             cvalue = value
             break
-          elsif @rand.rand() < Math.exp((cvalue - value)/temperature)
+          elsif @rand.rand() < Math.exp((value - cvalue)/temperature)
             clique = Array.new(element)
             cvalue = value
             break

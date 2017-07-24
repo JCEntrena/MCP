@@ -18,12 +18,12 @@ module Algorithm
     aux << vertex
     aux
   end
-  # SWAP
-  def swap(clique, in_clique, out_clique)
-    aux = Array.new(clique)
-    aux << out_clique
-    aux.delete(in_clique)
-    aux
+  # Swap that finds node to remove.
+  # Vertex is not in clique, connected to all but one nodes in clique.
+  # We add vertex, remove vertex not connected.
+  def swap(clique, vertex, matrix)
+    not_connected = clique.select{|x| matrix[x][vertex] == 0}
+    swap(clique, not_connected, vertex)
   end
   # DROP
   def drop(clique, vertex)

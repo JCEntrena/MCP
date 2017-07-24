@@ -9,6 +9,33 @@ module Algorithm
 
   public
 
+  #############################
+  # Algoritmos para realizar movimientos add, swap y drop. Con copia para evitar problemas con referencias
+  #############################
+  # ADD
+  def add(clique, vertex)
+    aux = Array.new(clique)
+    aux << vertex
+    aux
+  end
+  # SWAP
+  def swap(clique, in_clique, out_clique)
+    aux = Array.new(clique)
+    aux << out_clique
+    aux.delete(in_clique)
+    aux
+  end
+  # DROP
+  def drop(clique, vertex)
+    aux = Array.new(clique)
+    aux.delete(vertex)
+    aux
+  end
+
+  ###################################
+  # General purpose methods.
+  ###################################
+
   # Calculates the degree of a node (number of adjacencies of a node)
   # This is obtained by adding the elements in the row indicated by the node,
   # as 1's represents adjacencies.
@@ -65,7 +92,6 @@ module Algorithm
   end
 
   # Value of a clique. Used in objective functions.
-  # Value = Size + |C_0| / (Size² + 1)
   def value(clique, matrix)
     # Get C_0
     possible = connected_with_all(clique, matrix)
@@ -73,15 +99,16 @@ module Algorithm
     clique.length + possible.length / (matrix.length * 1.0)
   end
 
-  # Swap movement.
-  # Vertex is not in clique, connected to all but one nodes in clique.
-  # We add vertex, remove vertex not connected.
-  def swap(clique, vertex, matrix)
-    not_connected = clique.select{|x| matrix[x][vertex] == 0}
-    aux = Array.new(clique)
-    aux = aux - not_connected
-    aux << vertex
-    aux
+  # Value of a subgraph. Returns numbre of edges needed for subgraph to be a clique
+  # Value is 0 if subgraph is a clique, greater than 0 otherwise.
+  def value2(subgraph, matrix)
+    sum = 0
+    for i in (0...subgraph.length) do
+      for j in (i+1...subgraph.length) do
+        sum += (1 - matrix[subgraph[i]][subgraph[j]])
+      end
+    end
+    sum
   end
 
   # Basic checking method.

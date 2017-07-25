@@ -80,6 +80,64 @@ module Clique
     end
 
 
+    def solve2(problem)
+      matrix = problem.adjacencyMatrix
+      nVert = problem.nVertices
+      vertices = (0...nVert).to_a
+      # Defining clique elements and initial list of possible vertices: [0, 1, _ , vertices-1]
+      graph = []
+      best_clique = []
+      cvalue = Float::INFINITY
+      best_length = 0
+      # Defining temperatures
+      temperature = 1
+      final_temperature = 0.01
+      beta = 0.99
+      # Loop
+      until temperature <= final_temperature
+        # Neighbourhood
+        neighbourhood = []
+        (vertices - graph).each{|x| neighbourhood << add(graph, x);
+                                     graph.each{|y| neighbourhood << swap_two(graph, y, x)}}
+        graph.each{|x| neighbourhood << drop(graph, x)}
+        # Shuffle
+        neighbourhood.shuffle!(random: @rand.rand())
+        # Loop
+        neighbourhood.each do |element|
+          value = value2(element, matrix) - value(element, matrix)
+          # puts "Best: #{best_value}. Clique: #{cvalue}. Valor #{value}"
+          if value < cvalue
+            graph = Array.new(element)
+            cvalue = value
+            break
+          elsif @rand.rand() < Math.exp((value - cvalue)/temperature)
+            graph = Array.new(element)
+            cvalue = value
+            break
+          end
+
+        end
+        clique = @greedy.repair(graph, matrix)
+        if best_length < clique.length
+          best_clique = Array.new(clique)
+          best_length = clique.length
+        end
+
+        temperature *= beta
+      end
+
+      best_clique = @greedy.complete_clique(best_clique, matrix)
+
+      puts "¿Es clique? #{is_clique(best_clique, matrix)}"
+      # Adjust clique, for indexes
+      best_clique.map!{|x| x+1}
+
+      puts "Clique:"
+      puts best_clique.sort
+      puts "Longitud: #{best_clique.length}"
+    end
+
+
   end
 
 end

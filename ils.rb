@@ -11,6 +11,8 @@ module Clique
 
   class ILS
 
+    # Usa búsqueda local, que ya está referenciada.
+    # El método de perturbación se basa en Grosso, Locatelli, Pullan
     def solve(problem, iterations)
       # Initial declarations
       @ls = LocalSearch.new
@@ -18,9 +20,9 @@ module Clique
       nVert = problem.nVertices
       vertices = (0...nVert).to_a
       # Random
-      @ran = Random.new(28)
+      @rand = Random.new(28)
       # Limit for LS loop. Only used on swaps
-      limit = nVert / 2
+      limit = nVert
       # Initial clique, empty at first.
       clique = []
       best_clique = []
@@ -29,9 +31,9 @@ module Clique
       iterations.times do
         # Perturbation
         # When first used, it provides a random vertex; our starting clique.
-        rvertex = vertices[@ran.rand(nVert)]
+        rvertex = vertices[@rand.rand(nVert)]
         while clique.include?(rvertex)
-          rvertex = vertices[@ran.rand(nVert)]
+          rvertex = vertices[@rand.rand(nVert)]
         end
 
         clique.delete_if{|x| matrix[x][rvertex] == 0}
@@ -47,7 +49,7 @@ module Clique
 
       end
       # Print
-      print_clique(clique, matrix)
+      print_solution(clique, matrix)
     end
 
   end

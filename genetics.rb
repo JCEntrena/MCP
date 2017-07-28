@@ -21,6 +21,7 @@ module Clique
     private
 
     # Inversion mutation
+    # Generates random range, inverts nodes in range.
     def mutation(solution)
       aux = Array.new(solution)
       # Mutation points
@@ -39,10 +40,11 @@ module Clique
 
     public
 
+    # Genetic resolution.
+    # Elitist version. Completes sons with greedy approach.
     def solve(problem, iterations)
       # Initial declarations
       matrix = problem.adjacencyMatrix
-      nVert = problem.nVertices
       # Params.
       size = 50
       pMutation = 0.1
@@ -62,12 +64,13 @@ module Clique
           # Parents
           parent1 = population.delete_at(@rand.rand(population.length))
           parent2 = population.delete_at(@rand.rand(population.length))
-          # Cross
+          # Cross with probability pCruce
           if @rand.rand() < pCruce
             all = (parent1 + parent2).uniq
             common = parent1.select{|x| parent2.include?(x)}
             not_common = all - common
             # New generation
+            # Los hijos tendrán a los comunes, y los no comunes se repartirán entre ellos.
             son1 = Array.new(common)
             son2 = Array.new(common)
             not_common.each do |x|
@@ -85,16 +88,21 @@ module Clique
             if @rand.rand() < pMutation
               son2 = mutation(son2)
             end
-            # Repair sons
+            # Repair and complete (greedy) sons.
             son1 = @greedy.repair(son1, matrix)
+            son1 = @greedy.complete_clique(son1, matrix)
             son2 = @greedy.repair(son2, matrix)
+            son2 = @greedy.complete_clique(son2, matrix)
             # Get two best
             new_population += [parent1, parent2, son1, son2].max_by(2){|x| x.length}
+          # No cross, parents go to next generation.
           else
             new_population += [parent1, parent2]
           end
         end
+        # population = new population. Copying with Marshal, avoiding references issues.
         population = Marshal.load(Marshal.dump(new_population))
+        # Update best
         best = population.max_by{|x| x.length}
         # Get new best
         if best.length > best_clique.length
@@ -102,15 +110,11 @@ module Clique
         end
 
       end
-      puts "¿Es clique? #{is_clique(best_clique, matrix)}"
-      # Adjust clique, for indexes
-      best_clique.map!{|x| x+1}
-
-      puts "Clique:"
-      puts best_clique.sort
-      puts "Longitud: #{best_clique.length}"
+      print_solution(best_clique, matrix)
     end
 
+    # Memetic
+    # Same as genetic, but also uses LS in new population.
     def solve_memetic(problem, iterations)
       # Initial declarations
       matrix = problem.adjacencyMatrix
@@ -168,8 +172,9 @@ module Clique
             new_population += [parent1, parent2]
           end
         end
-
-        population = Marshal.load(Marshal.dump(new_population))
+        # Local search.
+        population = new_population.map{|x| @ls.solve_with_solution(problem, x, nVert/10)}
+        # Get best
         best = population.max_by{|x| x.length}
         # Get new best
         if best.length > best_clique.length
@@ -177,13 +182,7 @@ module Clique
         end
 
       end
-      puts "¿Es clique? #{is_clique(best_clique, matrix)}"
-      # Adjust clique, for indexes
-      best_clique.map!{|x| x+1}
-
-      puts "Clique:"
-      puts best_clique.sort
-      puts "Longitud: #{best_clique.length}"
+      print_solution(best_clique, matrix)
     end
 
   end

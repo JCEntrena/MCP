@@ -19,51 +19,6 @@ module Clique
       @rand = Random.new(28)
     end
 
-    # Operator add.
-    # Given a clique and a problem, return a (random) vertex to add to the clique (maintaining the clique structure).
-    def operatorADD(matrix, clique)
-      vertices = (0...matrix.length).to_a
-
-      # Possible additions set (PA)
-      # Using is_connected function, defined in algorithm.rb.
-      pAdditions = connected_with_all(clique, matrix)
-      # Check if empty
-      if pAdditions.empty?
-        return nil
-      end
-      # Return a random element
-      pAdditions[@rand.rand(pAdditions.length)]
-    end
-
-    # Operator swap.
-    # Given a clique and a problem, swap two vertices maintaining the clique structure.
-    def operatorSWAP(matrix, clique)
-      vertices = (0...matrix.length).to_a
-
-      # One missing set. Set of vertices connected to all but one nodes in the clique.
-      # We assume no vertex in the clique satisfies this condition.
-      oneMissing = missing_one_connection(clique, matrix)
-      # Check if empty
-      if oneMissing.empty?
-        return nil
-      end
-
-      # Take a random element.
-      element = oneMissing[@rand.rand(oneMissing.length)]
-
-      # Take the element not connected to the chosen.
-      # Taking the first, as it is a one-element array.
-      not_connected = clique.delete_if{|vertex| matrix[vertex][element] == 1}.first
-      # Return pair [out-of-clique, in-clique] to swap.
-      [element, not_connected]
-    end
-
-    def operatorDROP(matrix, clique)
-      vertices = (0...matrix.length).to_a
-      # Return node in the clique with less connections overall.
-      clique.min_by{|vertex| adjacencies(vertex, matrix)}
-    end
-
     # Idea from Katayama, Hamamoto, Narihisa
     def solve_with_solution(problem, clique, changes)
       matrix = problem.adjacencyMatrix
@@ -78,6 +33,7 @@ module Clique
       tabu = []
       # Loop
       until index > changes
+        # Add
         unless possible.empty?
           vertex = possible.max_by{|element| connections(element, possible, matrix)}
           new_clique << vertex
@@ -85,7 +41,7 @@ module Clique
           # Swap or drop
         else
           # Trying swap.
-          # Uso find para una técnica del primer mejor. Así, ahorro calcular
+          # Uso find para una técnica del primer mejor. Así, ahorro calcular.
           candidate = oneMissing.shuffle(random: Random.new(index)).find{|element| aux = swap(new_clique, element, matrix);
                                                    one_connected_with_all(aux, matrix)}
           unless candidate.nil?
@@ -93,7 +49,7 @@ module Clique
             tabu = []
           # Drop
           else
-            element = operatorDROP(matrix, new_clique)
+            element = new_clique.min_by{|vertex| adjacencies(vertex, matrix)}
             new_clique.delete(element)
             tabu << element
           end
@@ -111,16 +67,16 @@ module Clique
       best_clique
     end
 
+    # Método que llama al anterior para resolver.
+    # Puede cambiarse para que use la primera o segunda versión. 
     def solve(problem, changes)
-      c = solve_with_solution(problem, [], changes)
-      puts "¿Es clique? #{is_clique(c, problem.adjacencyMatrix)}"
-      c.map!{|x| x+1}
-      puts "Clique:"
-      puts c.sort
-      puts "Longitud: #{c.length}"
+      c = solve2(problem, [], changes)
+      print_solution(c, problem.adjacencyMatrix)
     end
 
-    # Segunda resolución de LS. Peor y mucho más lenta.
+    # Segunda resolución de LS.
+    # Sacado de Grosso, Locatelli, Pullan, del ILS.
+    # Usa elección aleatoria, para ganar velocidad.
     def solve2(problem, clique, changes)
       # Definitions
       matrix = problem.adjacencyMatrix
@@ -139,24 +95,24 @@ module Clique
       until (pAdditions.empty? and (oneMissing - tabu).empty?) or index > changes
         if !(pAdditions - tabu).empty?
           # Elección del elemento a añadir: en este caso, tomamos el que tiene más adyacencias.
-          element = (pAdditions - tabu).max_by{|x| adjacencies(x, matrix)}
+          element = (pAdditions - tabu)[@rand.rand((pAdditions - tabu).length)]
           my_clique << element
 
         elsif !(oneMissing - tabu).empty?
           # Elección de los elementos a intercambiar
-          # swap = [fuera del clique, en clique]
-          swap = operatorSWAP(matrix, my_clique)
+          not_connected = (oneMissing - tabu)[@rand.rand((oneMissing - tabu).length)]
+          in_clique = my_clique.find{|x| matrix[x][not_connected] == 0}
           # SWAP
-          my_clique.delete(swap.last)
-          my_clique << swap.first
+          my_clique.delete(in_clique)
+          my_clique << not_connected
           # Forbid node to be added again.
-          tabu << swap.last
+          tabu << not_connected
           # Incrementing index.
           index += 1
 
         elsif !pAdditions.empty?
           # Nuevamente elemento con más adyacencias, pero permitimos tabú.
-          element = pAdditions.max_by{|x| adjacencies(x, matrix)}
+          element = pAdditions[@rand.rand(pAdditions.length)]
           my_clique << element
         end
 
@@ -168,7 +124,7 @@ module Clique
         pAdditions = connected_with_all(my_clique, matrix)
         oneMissing = missing_one_connection(my_clique, matrix)
         # Limit tabu size
-        tabu = tabu[0..nVert/50]
+        # tabu = tabu[0..nVert/50]
       end
 
       best_clique

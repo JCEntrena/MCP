@@ -46,20 +46,8 @@ module Clique
         end
 
       end
-      # Printing issues
-      puts "¿Es clique? #{is_clique(best_clique, matrix)}"
-      best_clique.map!{|x| x+1}
-
-      puts 'Clique'
-      puts best_clique.sort
-      puts "Longitud: #{best_clique.length}"
-
-      #best_clique.each do |x|
-      #  best_clique.each do |y|
-      #    puts matrix[x][y]
-      #  end
-      #end
-
+      # Print
+      print_clique(clique, matrix)
     end
 
   end

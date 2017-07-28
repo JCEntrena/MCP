@@ -28,6 +28,14 @@ module Algorithm
     aux << vertex
     aux
   end
+  # Swap two vertices
+  # Given vertices in clique and out of clique.
+  def swap_two(clique, in_clique, out_clique)
+    aux = Array.new(clique)
+    aux.delete(in_clique)
+    aux << out_clique
+    aux
+  end
   # DROP
   def drop(clique, vertex)
     aux = Array.new(clique)
@@ -125,4 +133,15 @@ module Algorithm
     end
     true
   end
+
+  def print_solution(clique, matrix)
+    aux = Array.new(clique)
+    puts "¿Es clique? #{is_clique(aux, matrix)}"
+    # Adjust clique, for indexes
+    aux.map!{|x| x+1}
+    puts "Clique:"
+    puts aux.sort
+    puts "Longitud: #{aux.length}"
+  end
+
 end

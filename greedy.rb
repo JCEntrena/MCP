@@ -34,14 +34,7 @@ module Clique
         # Update possible.
         possible = connected_with_all(clique, matrix)
       end
-
-      puts "¿Es clique? #{is_clique(clique, matrix)}"
-      # Adjust clique, for indexes
-      clique.map!{|x| x+1}
-
-      puts "Clique:"
-      puts clique.sort
-      puts "Longitud: #{clique.length}"
+      print_solution(clique, matrix)
     end
 
     # Adaptative approach
@@ -88,15 +81,7 @@ module Clique
         possible = connected_with_all(clique, matrix)
         oneMissing = missing_one_connection(clique, matrix)
       end
-
-      puts "¿Es clique? #{is_clique(clique, matrix)}"
-      # Adjust clique, for indexes
-      clique.map!{|x| x+1}
-
-      puts "Clique:"
-      puts clique.sort
-      puts "Longitud: #{clique.length}"
-
+      print_solution(clique, matrix)
     end
 
     # Completes a clique
@@ -108,42 +93,24 @@ module Clique
         aux << element
         element = connected_with_all(aux, matrix).max_by{|x| adjacencies(x, matrix)}
       end
-
       aux
     end
 
-    # Completes a clique using LS
-    # Extends clique with operator ADD until no more vertices can be added.
-    # Uses random addition, as used in operatorADD.
+    # Completes a clique, using random addition.
     def complete_clique_random(clique, matrix)
-      ls = LocalSearch.new
       aux = Array.new(clique)
-      element = ls.operatorADD(matrix, aux)
-      until element.nil?
-        aux << element
-        element = ls.operatorADD(matrix, aux)
+      pAdditions = connected_with_all(aux, matrix)
+      until pAdditions.empty?
+        aux << pAdditions[@rand.rand(pAdditions.length)]
+        pAdditions = connected_with_all(aux, matrix)
       end
-
       aux
     end
-
 
     # Greedy adding random vertex.
     # Mainly for generating initial solution, to be used in other heuristics.
     def solve_random(problem)
-      matrix = problem.adjacencyMatrix
-      vertices = problem.nVertices
-      # Defining clique elements and initial list of possible vertices: [0, 1, _ , vertices-1]
-      clique = []
-      possible = (0...vertices).to_a
-
-      until possible.empty?
-        # Add new element to clique, delete from possible.
-        clique << possible[@rand.rand(possible.length)]
-        # Update possible.
-        possible = connected_with_all(clique, matrix)
-      end
-      clique
+      complete_clique_random([], problem.adjacencyMatrix)
     end
 
     # Greedy repair

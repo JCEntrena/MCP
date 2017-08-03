@@ -12,10 +12,11 @@ module Clique
   class ACO
 
     def initialize
-      @ran = Random.new(28)
+      @rand = Random.new(28)
     end
 
     # Simple solver.
+    # Idea propia.
     def solve(problem, iterations)
       # Initial declarations
       matrix = problem.adjacencyMatrix
@@ -38,7 +39,7 @@ module Clique
         nAnts.times do |j|
           clique = []
           # Pick random vertex.
-          clique << @ran.rand(1..nVert)
+          clique << @rand.rand(1..nVert)
           # Get neighbourhood
           pAdditions = connected_with_all(clique, matrix)
           # Repeat until neighbourhodd is empty.
@@ -51,7 +52,7 @@ module Clique
             # Get element depending on probability.
             # Comparo el valor aleatorio entre (0, 1) con el valor de la probabilidad.
             # Si es menor, resto y paso al siguiente.
-            aux = @ran.rand()
+            aux = @rand.rand()
             index = 0
             until aux <= probabilities[index]
               aux -= probabilities[index]
@@ -83,18 +84,13 @@ module Clique
 
       end
 
-      puts "¿Es clique? #{is_clique(best_clique, matrix)}"
-      # Adjust clique, for indexes
-      best_clique.map!{|x| x+1}
-
-      puts "Clique:"
-      puts best_clique.sort
-      puts "Longitud: #{best_clique.length}"
+      print_solution(best_solution, matrix)
 
     end
 
     # Second approach: Using more complex techniques.
     # Simmulated annealing + matrix information.
+    # Idea from Xu, Ma, Lei.
     def solve2(problem, iterations)
       # Initial declarations
       matrix = problem.adjacencyMatrix
@@ -121,21 +117,22 @@ module Clique
         nAnts.times do |j|
           clique = []
           # Pick random vertex.
-          clique << @ran.rand(1..nVert)
+          clique << @rand.rand(1..nVert)
           # Get neighbourhood
           pAdditions = connected_with_all(clique, matrix)
           # Repeat until neighbourhodd is empty.
           until pAdditions.empty?
+            # Sum of pheromones
+            sum = pheromone.inject(:+)
             # Probability. Using temperature * Degree/NumEdges as weight.
-            probabilities = pAdditions.map{|x| pheromone[x] + temperature * adjacencies(x, matrix) * 1.0 / nEdges}
-            # Sum of probabilities.
-            sum = probabilities.inject(:+)
+            probabilities = pAdditions.map{|x| pheromone[x] / sum * 1.0 + temperature * adjacencies(x, matrix) * 1.0 / nEdges}
             # Normalization
-            probabilities.map!{|x| x*1.0 / sum}
+            sum2 = probabilities.inject(:+)
+            probabilities.map!{|x| x*1.0 / sum2}
             # Get element depending on probability.
             # Comparo el valor aleatorio entre (0, 1) con el valor de la probabilidad.
             # Si es menor, resto y paso al siguiente.
-            aux = @ran.rand()
+            aux = @rand.rand()
             index = 0
             until aux <= probabilities[index]
               aux -= probabilities[index]
@@ -166,16 +163,8 @@ module Clique
         end
         # Update temperature
         temperature *= gamma
-
       end
-
-      # Adjust clique, for indexes
-      best_clique.map!{|x| x+1}
-
-      puts "Clique:"
-      puts best_clique.sort
-      puts "Longitud: #{best_clique.length}"
-
+      print_solution(best_clique, matrix)
     end
 
   end

@@ -17,6 +17,7 @@ module Clique
     end
 
     # Simple SA
+    # Idea propia
     # Toma como entorno C0 y C1.
     def solve(problem)
       matrix = problem.adjacencyMatrix
@@ -71,7 +72,7 @@ module Clique
 
       best_clique = @greedy.complete_clique(best_clique, matrix)
 
-      print_clique(best_clique, matrix) 
+      print_solution(best_clique, matrix)
     end
 
     # Toma como entorno cualquier drop, add (de CUALQUIER vértices) o swap (de cualquier vértice también)
@@ -124,13 +125,7 @@ module Clique
 
       best_clique = @greedy.complete_clique(best_clique, matrix)
 
-      puts "¿Es clique? #{is_clique(best_clique, matrix)}"
-      # Adjust clique, for indexes
-      best_clique.map!{|x| x+1}
-
-      puts "Clique:"
-      puts best_clique.sort
-      puts "Longitud: #{best_clique.length}"
+      print_solution(best_clique, matrix)
     end
 
 

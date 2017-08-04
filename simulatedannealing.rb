@@ -69,7 +69,7 @@ module Clique
 
         temperature *= beta
       end
-
+      # Improve best clique, just in case C0 is not empty
       best_clique = @greedy.complete_clique(best_clique, matrix)
 
       print_solution(best_clique, matrix)
@@ -101,7 +101,7 @@ module Clique
         neighbourhood.shuffle!(random: @rand.rand())
         # Loop
         neighbourhood.each do |element|
-          value = value2(element, matrix) - value(element, matrix)
+          value = value2(element, matrix) - element.length
           # puts "Best: #{best_value}. Clique: #{cvalue}. Valor #{value}"
           if value < cvalue
             graph = Array.new(element)

@@ -68,12 +68,7 @@ module Clique
       readerMethod
       @solver = LocalSearch.new
       tiempo = Time.now
-    #  @solver.solve(@problems[4], 30)
-    #  @solver.solve_memetic(@problems[4], 30)
-    #  @solver.solve(@problems[3], 30)
-    #  @solver.solve_memetic(@problems[3], 30)
       @solver.solve(@problems[5], @problems[5].nVertices)
-    #  @solver.solve_memetic(@problems[2], 30)
       print "Tiempo = " + (Time.now - tiempo).to_s
     end
   end

@@ -5,6 +5,11 @@ require 'singleton'
 require_relative 'problem.rb'
 require_relative 'greedy.rb'
 require_relative 'ils.rb'
+require_relative 'aco.rb'
+require_relative 'localsearch.rb'
+require_relative 'grasp.rb'
+require_relative 'simulatedannealing.rb'
+require_relative 'genetics.rb'
 
 module Clique
 
@@ -61,10 +66,14 @@ module Clique
 
     def main
       readerMethod
-      @solver = ILS.new
+      @solver = LocalSearch.new
       tiempo = Time.now
-      @solver.solve(@problems.first, 20)
-      @solver.solve(@problems.last, 20)
+    #  @solver.solve(@problems[4], 30)
+    #  @solver.solve_memetic(@problems[4], 30)
+    #  @solver.solve(@problems[3], 30)
+    #  @solver.solve_memetic(@problems[3], 30)
+      @solver.solve(@problems[5], @problems[5].nVertices)
+    #  @solver.solve_memetic(@problems[2], 30)
       print "Tiempo = " + (Time.now - tiempo).to_s
     end
   end

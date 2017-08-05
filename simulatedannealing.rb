@@ -122,12 +122,11 @@ module Clique
 
         temperature *= beta
       end
-
+      # Improve best clique, just in case C0 is not empty
       best_clique = @greedy.complete_clique(best_clique, matrix)
 
       print_solution(best_clique, matrix)
     end
-
 
   end
 

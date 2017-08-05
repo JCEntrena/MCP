@@ -18,7 +18,7 @@ module Clique
 
     # Greedy approach to the clique problem.
     # Starting with L = []
-    # We choose those indexes with a max amount of connections, connected to all of L, and a random one of those, adding it to L
+    # We choose those indexes with a max amount of connections, connected to all of L, and a random among those, adding it to L
     # Repeat until no index is found.
 
     def solve(problem)

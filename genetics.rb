@@ -22,6 +22,7 @@ module Clique
 
     # Inversion mutation
     # Generates random range, inverts nodes in range.
+    # Based on ideas of Zhang, Wang, Wu, Zhan
     def mutation(solution)
       aux = Array.new(solution)
       # Mutation points
@@ -42,6 +43,7 @@ module Clique
 
     # Genetic resolution.
     # Elitist version. Completes sons with greedy approach.
+    # Also based on Zhang, Wang, Wu, Zhan work. 
     def solve(problem, iterations)
       # Initial declarations
       matrix = problem.adjacencyMatrix
@@ -115,6 +117,7 @@ module Clique
 
     # Memetic
     # Same as genetic, but also uses LS in new population.
+    # Basado en el anterior, usando búsqueda local.
     def solve_memetic(problem, iterations)
       # Initial declarations
       matrix = problem.adjacencyMatrix

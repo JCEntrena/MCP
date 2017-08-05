@@ -68,7 +68,7 @@ module Clique
     end
 
     # Método que llama al anterior para resolver.
-    # Puede cambiarse para que use la primera o segunda versión. 
+    # Puede cambiarse para que use la primera o segunda versión.
     def solve(problem, changes)
       c = solve2(problem, [], changes)
       print_solution(c, problem.adjacencyMatrix)
@@ -105,8 +105,8 @@ module Clique
           # SWAP
           my_clique.delete(in_clique)
           my_clique << not_connected
-          # Forbid node to be added again.
-          tabu << not_connected
+          # Forbid node to be added again. We add at the beginning of tabu list.
+          tabu.unshift(not_connected)
           # Incrementing index.
           index += 1
 
@@ -124,7 +124,7 @@ module Clique
         pAdditions = connected_with_all(my_clique, matrix)
         oneMissing = missing_one_connection(my_clique, matrix)
         # Limit tabu size
-        # tabu = tabu[0..nVert/50]
+        #tabu = tabu[0..nVert/50]
       end
 
       best_clique

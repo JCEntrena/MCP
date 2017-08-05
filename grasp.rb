@@ -19,7 +19,7 @@ module Clique
     end
 
     private
-
+    # Takes first half of possible nodes, sorted by adjacencies, and chooses randomly among them.
     def generate_random_solution(problem)
       # Initial declarations
       matrix = problem.adjacencyMatrix
@@ -37,27 +37,22 @@ module Clique
     end
 
     public
-
+    # Resuelve mediante greedy aleatorizado.
+    # Idea propia, básica de GRASP.
     def solve(problem, iterations)
       matrix = problem.adjacencyMatrix
       nVert = problem.nVertices
       best_clique = []
-    # Loop
+      # Loop
       iterations.times do
         solution = generate_random_solution(problem)
-        solution = @ls.solve_with_solution(problem, solution, nVert/2)
+        solution = @ls.solve_with_solution(problem, solution, nVert)
         if solution.length > best_clique.length
           best_clique = Array.new(solution)
         end
       end
-
-      puts "¿Es clique? #{is_clique(best_clique, matrix)}"
-      # Adjust clique, for indexes
-      best_clique.map!{|x| x+1}
-
-      puts "Clique:"
-      puts best_clique.sort
-      puts "Longitud: #{best_clique.length}"
+      # Print
+      print_solution(best_clique, matrix)
     end
 
   end

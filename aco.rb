@@ -23,9 +23,9 @@ module Clique
       nVert = problem.nVertices
       vertices = (0...nVert).to_a
       # Pheromone, all starting at the same value.
-      pheromone = Array.new(nVert, 1.0/nVert)
+      pheromone = Array.new(nVert, 10.0)
       # Decreasing pheromone factor, number of ants.
-      beta = 0.9
+      beta = 0.925
       nAnts = 50
       # Initial clique, empty at first.
       clique = []
@@ -79,12 +79,12 @@ module Clique
         pheromone.map!{|x| x*beta}
         # Increasing
         iteration_best.each do |x|
-          pheromone[x] *= (iteration_best.length + nVert) * 1.0 / nVert
+          pheromone[x] *= (iteration_best.length * 5.0 + nVert) / nVert
         end
 
       end
 
-      print_solution(best_solution, matrix)
+      print_solution(best_clique, matrix)
 
     end
 
@@ -98,7 +98,7 @@ module Clique
       nEdges = problem.nEdges
       vertices = (0...nVert).to_a
       # Pheromone, all starting at the same value.
-      pheromone = Array.new(nVert, 10)
+      pheromone = Array.new(nVert, 10.0)
       # Decreasing pheromone factor, number of ants.
       beta = 0.9
       nAnts = 50
@@ -159,7 +159,7 @@ module Clique
         pheromone.map!{|x| x*beta}
         # Increasing
         iteration_best.each do |x|
-          pheromone[x] *= (iteration_best.length + nVert) * 1.0 / nVert
+          pheromone[x] *= (iteration_best.length * 5.0 + nVert) / nVert
         end
         # Update temperature
         temperature *= gamma

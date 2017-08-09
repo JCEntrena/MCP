@@ -12,7 +12,7 @@ module Clique
   class ACO
 
     def initialize
-      @rand = Random.new(28)
+      @rand = Random.new()
     end
 
     # Simple solver.
@@ -84,8 +84,7 @@ module Clique
 
       end
 
-      print_solution(best_clique, matrix)
-
+      best_clique
     end
 
     # Second approach: Using more complex techniques.
@@ -100,11 +99,11 @@ module Clique
       # Pheromone, all starting at the same value.
       pheromone = Array.new(nVert, 10.0)
       # Decreasing pheromone factor, number of ants.
-      beta = 0.9
+      beta = 0.925
       nAnts = 50
       # Decreasing temperature factor
       temperature = 1
-      gamma = 0.925
+      gamma = 0.95
       # Initial clique, empty at first.
       clique = []
       best_clique = []
@@ -164,7 +163,7 @@ module Clique
         # Update temperature
         temperature *= gamma
       end
-      print_solution(best_clique, matrix)
+      best_clique
     end
 
   end

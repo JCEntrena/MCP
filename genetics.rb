@@ -13,7 +13,7 @@ module Clique
 
 
     def initialize
-      @rand = Random.new(28)
+      @rand = Random.new()
       @ls = LocalSearch.new
       @greedy = Greedy.new
     end
@@ -43,12 +43,12 @@ module Clique
 
     # Genetic resolution.
     # Elitist version. Completes sons with greedy approach.
-    # Also based on Zhang, Wang, Wu, Zhan work. 
+    # Also based on Zhang, Wang, Wu, Zhan work.
     def solve(problem, iterations)
       # Initial declarations
       matrix = problem.adjacencyMatrix
       # Params.
-      size = 50
+      size = 40
       pMutation = 0.1
       pCruce = 1
       # Initial random population.
@@ -112,7 +112,7 @@ module Clique
         end
 
       end
-      print_solution(best_clique, matrix)
+      best_clique
     end
 
     # Memetic
@@ -185,7 +185,7 @@ module Clique
         end
 
       end
-      print_solution(best_clique, matrix)
+      best_clique
     end
 
   end

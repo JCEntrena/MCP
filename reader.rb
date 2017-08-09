@@ -58,18 +58,28 @@ module Clique
       end
 
       # Testing
-      @problems.each do |i|
-          puts i.to_s
-      end
+      #@problems.each do |i|
+      #    puts i.to_s
+      #end
 
     end
 
     def main
       readerMethod
-      @solver = LocalSearch.new
-      tiempo = Time.now
-      @solver.solve(@problems[5], @problems[5].nVertices)
-      print "Tiempo = " + (Time.now - tiempo).to_s
+      @solver = SA.new
+      @problems.each do |problem|
+        tiempo = Time.now
+        puts problem.name
+        clique = []
+        5.times do
+          new_clique = @solver.solve(problem)
+          if new_clique.length > clique.length
+            clique = Array.new(new_clique)
+          end
+        end
+        print_solution(clique, problem.adjacencyMatrix)
+        puts "#{(Time.now - tiempo)}\n\n"
+      end
     end
   end
 

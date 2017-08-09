@@ -14,7 +14,7 @@ module Clique
     public
 
     def initialize
-      @rand = Random.new(28)
+      @rand = Random.new()
       @ls = LocalSearch.new
     end
 
@@ -43,16 +43,16 @@ module Clique
       matrix = problem.adjacencyMatrix
       nVert = problem.nVertices
       best_clique = []
+      limit = nVert
       # Loop
       iterations.times do
         solution = generate_random_solution(problem)
-        solution = @ls.solve_with_solution(problem, solution, nVert)
+        solution = @ls.solve2(problem, solution, limit)
         if solution.length > best_clique.length
           best_clique = Array.new(solution)
         end
       end
-      # Print
-      print_solution(best_clique, matrix)
+      best_clique
     end
 
   end

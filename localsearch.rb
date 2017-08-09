@@ -16,7 +16,7 @@ module Clique
     public
 
     def initialize
-      @rand = Random.new(28)
+      @rand = Random.new()
     end
 
     # Idea from Katayama, Hamamoto, Narihisa
@@ -70,7 +70,7 @@ module Clique
     # Método que llama al anterior para resolver.
     # Puede cambiarse para que use la primera o segunda versión.
     def solve(problem, changes)
-      c = solve2(problem, [], changes)
+      c = solve_with_solution(problem, [], changes)
       print_solution(c, problem.adjacencyMatrix)
     end
 
@@ -129,8 +129,6 @@ module Clique
 
       best_clique
     end
-
-
 
   end
 

@@ -12,7 +12,7 @@ module Clique
   class SA
 
     def initialize
-      @rand = Random.new(28)
+      @rand = Random.new()
       @greedy = Greedy.new
     end
 
@@ -29,7 +29,7 @@ module Clique
       best_length = 0
       # Defining temperatures
       temperature = 1
-      final_temperature = 0.01
+      final_temperature = 0.001
       beta = 0.99
       # Possible additions an One Missing init
       pAdditions = (0...nVert).to_a
@@ -72,7 +72,7 @@ module Clique
       # Improve best clique, just in case C0 is not empty
       best_clique = @greedy.complete_clique(best_clique, matrix)
 
-      print_solution(best_clique, matrix)
+      best_clique
     end
 
     # Toma como entorno cualquier drop, add (de CUALQUIER vértices) o swap (de cualquier vértice también)
@@ -88,7 +88,7 @@ module Clique
       best_length = 0
       # Defining temperatures
       temperature = 1
-      final_temperature = 0.01
+      final_temperature = 0.001
       beta = 0.99
       # Loop
       until temperature <= final_temperature
@@ -125,7 +125,7 @@ module Clique
       # Improve best clique, just in case C0 is not empty
       best_clique = @greedy.complete_clique(best_clique, matrix)
 
-      print_solution(best_clique, matrix)
+      best_clique
     end
 
   end

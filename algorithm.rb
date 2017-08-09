@@ -136,12 +136,8 @@ module Algorithm
 
   def print_solution(clique, matrix)
     aux = Array.new(clique)
-    puts "¿Es clique? #{is_clique(aux, matrix)}"
-    # Adjust clique, for indexes
-    aux.map!{|x| x+1}
-    puts "Clique:"
-    puts aux.sort
-    puts "Longitud: #{aux.length}"
+    puts "#{is_clique(aux, matrix)}"
+    puts "#{aux.length}"
   end
 
 end

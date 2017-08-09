@@ -11,6 +11,10 @@ module Clique
 
   class ILS
 
+    def initialize
+      @rand = Random.new()
+    end
+
     # Usa búsqueda local, que ya está referenciada.
     # El método de perturbación se basa en Grosso, Locatelli, Pullan
     def solve(problem, iterations)
@@ -19,8 +23,6 @@ module Clique
       matrix = problem.adjacencyMatrix
       nVert = problem.nVertices
       vertices = (0...nVert).to_a
-      # Random
-      @rand = Random.new(28)
       # Limit for LS loop. Only used on swaps
       limit = nVert
       # Initial clique, empty at first.
@@ -41,15 +43,14 @@ module Clique
 
         # LS Algorithm
         # Initialize lists
-        clique = @ls.solve_with_solution(problem, clique, limit)
+        clique = @ls.solve2(problem, clique, limit)
 
         if clique.length > best_clique.length
           best_clique = Array.new(clique)
         end
 
       end
-      # Print
-      print_solution(clique, matrix)
+      clique
     end
 
   end

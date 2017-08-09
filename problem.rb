@@ -28,6 +28,10 @@ module Clique
        Número de arcos: #{@nEdges}.\n\n"
     end
 
+    def name
+      "#{@name}\n"
+    end
+
   end
 
 end

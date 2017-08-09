@@ -13,7 +13,7 @@ module Clique
     public
 
     def initialize
-      @rand = Random.new(28)
+      @rand = Random.new()
     end
 
     # Greedy approach to the clique problem.
@@ -34,7 +34,7 @@ module Clique
         # Update possible.
         possible = connected_with_all(clique, matrix)
       end
-      print_solution(clique, matrix)
+      clique
     end
 
     # Adaptative approach
@@ -81,7 +81,7 @@ module Clique
         possible = connected_with_all(clique, matrix)
         oneMissing = missing_one_connection(clique, matrix)
       end
-      print_solution(clique, matrix)
+      clique
     end
 
     # Completes a clique

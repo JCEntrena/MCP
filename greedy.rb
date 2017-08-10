@@ -124,6 +124,16 @@ module Clique
       aux
     end
 
+    # Random repair
+    def repair_random(solution, matrix)
+      aux = Array.new(solution)
+      until is_clique(aux, matrix)
+        element = aux[@rand.rand(aux.length)]
+        aux.delete(element)
+      end
+      aux
+    end
+
   end
 
 end

@@ -68,18 +68,21 @@ module Clique
       readerMethod
       @solver = SA.new
       @problems.each do |problem|
-        tiempo = Time.now
         puts problem.name
+        STDERR.puts problem.name
         clique = []
-        5.times do
+        10.times do
+          tiempo = Time.now
           new_clique = @solver.solve(problem)
           if new_clique.length > clique.length
             clique = Array.new(new_clique)
           end
+          puts "#{(Time.now - tiempo)}\n"
         end
         print_solution(clique, problem.adjacencyMatrix)
-        puts "#{(Time.now - tiempo)}\n\n"
+        puts "\n"
       end
+
     end
   end
 

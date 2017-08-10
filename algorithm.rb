@@ -138,6 +138,8 @@ module Algorithm
     aux = Array.new(clique)
     puts "#{is_clique(aux, matrix)}"
     puts "#{aux.length}"
+    STDERR.puts "#{aux}"
+    STDERR.puts "#{aux.length}"
   end
 
 end

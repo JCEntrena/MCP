@@ -23,11 +23,11 @@ module Clique
     # Inversion mutation
     # Generates random range, inverts nodes in range.
     # Based on ideas of Zhang, Wang, Wu, Zhan
-    def mutation(solution)
+    def mutation(solution, matrix)
       aux = Array.new(solution)
       # Mutation points
-      p1 = @rand.rand(aux.length)
-      p2 = @rand.rand(aux.length)
+      p1 = @rand.rand(matrix.length)
+      p2 = @rand.rand(matrix.length)
       # Inversion
       ([p1, p2].min..[p1, p2].max).each do |x|
         if aux.include?(x)
@@ -48,7 +48,7 @@ module Clique
       # Initial declarations
       matrix = problem.adjacencyMatrix
       # Params.
-      size = 40
+      size = 50
       pMutation = 0.1
       pCruce = 1
       # Initial random population.
@@ -84,17 +84,17 @@ module Clique
             end
             # Mutation (inversion) (son1)
             if @rand.rand() < pMutation
-              son1 = mutation(son1)
+              son1 = mutation(son1, matrix)
             end
             # Mutation (inversion) (son2)
             if @rand.rand() < pMutation
-              son2 = mutation(son2)
+              son2 = mutation(son2, matrix)
             end
             # Repair and complete (greedy) sons.
-            son1 = @greedy.repair(son1, matrix)
-            son1 = @greedy.complete_clique(son1, matrix)
-            son2 = @greedy.repair(son2, matrix)
-            son2 = @greedy.complete_clique(son2, matrix)
+            son1 = @greedy.repair_random(son1, matrix)
+            son1 = @greedy.complete_clique_random(son1, matrix)
+            son2 = @greedy.repair_random(son2, matrix)
+            son2 = @greedy.complete_clique_random(son2, matrix)
             # Get two best
             new_population += [parent1, parent2, son1, son2].max_by(2){|x| x.length}
           # No cross, parents go to next generation.
@@ -165,10 +165,10 @@ module Clique
               son2 = mutation(son2)
             end
             # Repair sons
-            son1 = @greedy.repair(son1, matrix)
-            son1 = @greedy.complete_clique(son1, matrix)
-            son2 = @greedy.repair(son2, matrix)
-            son2 = @greedy.complete_clique(son2, matrix)
+            son1 = @greedy.repair_random(son1, matrix)
+            son1 = @greedy.complete_clique_random(son1, matrix)
+            son2 = @greedy.repair_random(son2, matrix)
+            son2 = @greedy.complete_clique_random(son2, matrix)
             # Get two best
             new_population += [parent1, parent2, son1, son2].max_by(2){|x| x.length}
           else
@@ -176,7 +176,7 @@ module Clique
           end
         end
         # Local search.
-        population = new_population.map{|x| @ls.solve_with_solution(problem, x, nVert/10)}
+        population = new_population.map{|x| @ls.solve_with_solution(problem, x, nVert/8)}
         # Get best
         best = population.max_by{|x| x.length}
         # Get new best

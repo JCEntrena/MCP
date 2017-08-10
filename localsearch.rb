@@ -70,8 +70,8 @@ module Clique
     # Método que llama al anterior para resolver.
     # Puede cambiarse para que use la primera o segunda versión.
     def solve(problem, changes)
-      c = solve_with_solution(problem, [], changes)
-      print_solution(c, problem.adjacencyMatrix)
+      clique = solve_with_solution(problem, [], changes)
+      clique
     end
 
     # Segunda resolución de LS.

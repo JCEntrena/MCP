@@ -24,11 +24,12 @@ module Clique
       # Initial declarations
       matrix = problem.adjacencyMatrix
       nVert = problem.nVertices
+      adj = problem.vertAdjacencies
       random_clique = []
       possible = (0...nVert).to_a
       # Loop. Generating random solution
       until possible.empty?
-        candidates = possible.sort_by{|x| adjacencies(x, matrix)}[0..possible.length/2]
+        candidates = possible.sort_by{|x| adj[x]}[0..possible.length/2]
         random_clique << candidates[@rand.rand(candidates.length)]
         possible = connected_with_all(random_clique, matrix)
       end

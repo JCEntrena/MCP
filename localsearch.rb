@@ -23,6 +23,7 @@ module Clique
     def solve_with_solution(problem, clique, changes)
       matrix = problem.adjacencyMatrix
       vertices = problem.nVertices
+      adj = problem.vertAdjacencies
       new_clique = Array.new(clique)
       best_clique = Array.new(new_clique)
       # Initial possible additions and one-missing vertices.
@@ -49,7 +50,7 @@ module Clique
             tabu = []
           # Drop
           else
-            element = new_clique.min_by{|vertex| adjacencies(vertex, matrix)}
+            element = new_clique.min_by{|vertex| adj[vertex]}
             new_clique.delete(element)
             tabu << element
           end

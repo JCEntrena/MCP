@@ -24,13 +24,14 @@ module Clique
     def solve(problem)
       matrix = problem.adjacencyMatrix
       vertices = problem.nVertices
+      adj = problem.vertAdjacencies
       # Defining clique elements and initial list of possible vertices: [0, 1, _ , vertices-1]
       clique = []
       possible = (0...vertices).to_a
 
       until possible.empty?
         # Add new element to clique, delete from possible.
-        clique << possible.max_by{|x| adjacencies(x, matrix)}
+        clique << possible.max_by{|x| adj[x]}
         # Update possible.
         possible = connected_with_all(clique, matrix)
       end
@@ -86,12 +87,14 @@ module Clique
 
     # Completes a clique
     # Extends clique until no more vertices can be added.
-    def complete_clique(clique, matrix)
+    def complete_clique(clique, problem)
+      matrix = problem.adjacencyMatrix
+      adj = problem.vertAdjacencies
       aux = Array.new(clique)
-      element = connected_with_all(aux, matrix).max_by{|x| adjacencies(x, matrix)}
+      element = connected_with_all(aux, matrix).max_by{|x| adj[x]}
       until element.nil?
         aux << element
-        element = connected_with_all(aux, matrix).max_by{|x| adjacencies(x, matrix)}
+        element = connected_with_all(aux, matrix).max_by{|x| adj[x]}
       end
       aux
     end
@@ -115,10 +118,12 @@ module Clique
 
     # Greedy repair
     # Deletes nodes until a clique is reached.
-    def repair(solution, matrix)
+    def repair(solution, problem)
+      matrix = problem.adjacencyMatrix
+      adj = problem.vertAdjacencies
       aux = Array.new(solution)
       until is_clique(aux, matrix)
-        element = aux.min_by{|x| adjacencies(x, matrix)}
+        element = aux.min_by{|x| adj[x]}
         aux.delete(element)
       end
       aux

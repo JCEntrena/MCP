@@ -70,7 +70,7 @@ module Clique
         temperature *= beta
       end
       # Improve best clique, just in case C0 is not empty
-      best_clique = @greedy.complete_clique(best_clique, matrix)
+      best_clique = @greedy.complete_clique(best_clique, problem)
 
       best_clique
     end
@@ -114,7 +114,7 @@ module Clique
           end
 
         end
-        clique = @greedy.repair(graph, matrix)
+        clique = @greedy.repair(graph, problem)
         if best_length < clique.length
           best_clique = Array.new(clique)
           best_length = clique.length
@@ -123,7 +123,7 @@ module Clique
         temperature *= beta
       end
       # Improve best clique, just in case C0 is not empty
-      best_clique = @greedy.complete_clique(best_clique, matrix)
+      best_clique = @greedy.complete_clique(best_clique, problem)
 
       best_clique
     end

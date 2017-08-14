@@ -43,7 +43,7 @@ module Clique
 
         # LS Algorithm
         # Initialize lists
-        clique = @ls.solve2(problem, clique, limit)
+        clique = @ls.solve_with_solution(problem, clique, limit)
 
         if clique.length > best_clique.length
           best_clique = Array.new(clique)

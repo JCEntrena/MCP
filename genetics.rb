@@ -158,11 +158,11 @@ module Clique
             end
             # Mutation (inversion) (son1)
             if @rand.rand() < pMutation
-              son1 = mutation(son1)
+              son1 = mutation(son1, matrix)
             end
             # Mutation (inversion) (son2)
             if @rand.rand() < pMutation
-              son2 = mutation(son2)
+              son2 = mutation(son2, matrix)
             end
             # Repair sons
             son1 = @greedy.repair_random(son1, matrix)
@@ -176,7 +176,7 @@ module Clique
           end
         end
         # Local search.
-        population = new_population.map{|x| @ls.solve_with_solution(problem, x, nVert/8)}
+        population = new_population.map{|x| @ls.solve2(problem, x, nVert/8)}
         # Get best
         best = population.max_by{|x| x.length}
         # Get new best

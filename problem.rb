@@ -14,12 +14,14 @@ module Clique
     attr_reader :nVertices
     attr_reader :nEdges
     attr_reader :adjacencyMatrix
+    attr_reader :vertAdjacencies
 
     def initialize(name, nVertices, nEdges, matrix)
       @name = name
       @nVertices = nVertices
       @nEdges = nEdges
       @adjacencyMatrix = matrix
+      @vertAdjacencies = (0...@nVertices).map{|x| adjacencies(x, @adjacencyMatrix)}
     end
 
     def to_s

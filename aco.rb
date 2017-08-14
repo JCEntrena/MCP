@@ -95,6 +95,7 @@ module Clique
       matrix = problem.adjacencyMatrix
       nVert = problem.nVertices
       nEdges = problem.nEdges
+      adj = problem.vertAdjacencies
       vertices = (0...nVert).to_a
       # Pheromone, all starting at the same value.
       pheromone = Array.new(nVert, 10.0)
@@ -124,7 +125,7 @@ module Clique
             # Sum of pheromones
             sum = pheromone.inject(:+)
             # Probability. Using temperature * Degree/NumEdges as weight.
-            probabilities = pAdditions.map{|x| pheromone[x] / sum * 1.0 + temperature * adjacencies(x, matrix) * 1.0 / nEdges}
+            probabilities = pAdditions.map{|x| pheromone[x] / sum * 1.0 + temperature * adj[x] * 1.0 / nEdges}
             # Normalization
             sum2 = probabilities.inject(:+)
             probabilities.map!{|x| x*1.0 / sum2}

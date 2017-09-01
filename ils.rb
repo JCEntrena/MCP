@@ -13,13 +13,13 @@ module Clique
 
     def initialize
       @rand = Random.new()
+      @ls = LocalSearch.new
     end
 
-    # Usa búsqueda local, que ya está referenciada.
-    # El método de perturbación se basa en Grosso, Locatelli, Pullan
+    # Uses LS methods
+    # Perturbation based on Grosso's, Locatelli's, Pullan's work
     def solve(problem, iterations)
       # Initial declarations
-      @ls = LocalSearch.new
       matrix = problem.adjacencyMatrix
       nVert = problem.nVertices
       vertices = (0...nVert).to_a

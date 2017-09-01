@@ -11,7 +11,6 @@ module Clique
 
   class Genetics
 
-
     def initialize
       @rand = Random.new()
       @ls = LocalSearch.new
@@ -72,7 +71,7 @@ module Clique
             common = parent1.select{|x| parent2.include?(x)}
             not_common = all - common
             # New generation
-            # Los hijos tendrán a los comunes, y los no comunes se repartirán entre ellos.
+            # Sons will get common nodes, not common will be distributed evenly.
             son1 = Array.new(common)
             son2 = Array.new(common)
             not_common.each do |x|
@@ -117,7 +116,7 @@ module Clique
 
     # Memetic
     # Same as genetic, but also uses LS in new population.
-    # Basado en el anterior, usando búsqueda local.
+    # Based on prior algorithm. 
     def solve_memetic(problem, iterations)
       # Initial declarations
       matrix = problem.adjacencyMatrix
@@ -176,7 +175,7 @@ module Clique
           end
         end
         # Local search.
-        population = new_population.map{|x| @ls.solve2(problem, x, nVert/8)}
+        population = new_population.map{|x| @ls.solve_dynamic(problem, x, nVert/8)}
         # Get best
         best = population.max_by{|x| x.length}
         # Get new best

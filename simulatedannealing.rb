@@ -16,9 +16,7 @@ module Clique
       @greedy = Greedy.new
     end
 
-    # Simple SA
-    # Idea propia
-    # Toma como entorno C0 y C1.
+    # Simple SA, my own idea.
     def solve(problem)
       matrix = problem.adjacencyMatrix
       nVert = problem.nVertices
@@ -27,11 +25,11 @@ module Clique
       best_clique = []
       cvalue = 0
       best_length = 0
-      # Defining temperatures
+      # Defining temperatures and beta
       temperature = 1
       final_temperature = 0.001
       beta = 0.99
-      # Possible additions an One Missing init
+      # Possible additions and One Missing init
       pAdditions = (0...nVert).to_a
       oneMissing = []
       # Loop
@@ -48,7 +46,6 @@ module Clique
         # Loop
         neighbourhood.each do |element|
           value = value(element, matrix)
-          # puts "Best: #{best_value}. Clique: #{cvalue}. Valor #{value}"
           if value > cvalue
             clique = Array.new(element)
             cvalue = value
@@ -75,8 +72,8 @@ module Clique
       best_clique
     end
 
-    # Toma como entorno cualquier drop, add (de CUALQUIER vértices) o swap (de cualquier vértice también)
-    # Idea de X. Geng, J. Xu, J. Xiao, L. Pan. Adaptada para cambiar cosas.
+    # Uses drops, add (of all vertices) and swaps (of all vertices) as neighbourhood.
+    # Idea from X. Geng, J. Xu, J. Xiao, L. Pan., adapted.
     def solve2(problem)
       matrix = problem.adjacencyMatrix
       nVert = problem.nVertices
@@ -102,7 +99,6 @@ module Clique
         # Loop
         neighbourhood.each do |element|
           value = value2(element, matrix) - element.length
-          # puts "Best: #{best_value}. Clique: #{cvalue}. Valor #{value}"
           if value < cvalue
             graph = Array.new(element)
             cvalue = value

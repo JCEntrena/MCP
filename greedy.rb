@@ -69,7 +69,6 @@ module Clique
         else
           neighbourhood = possible + oneMissing - [last_swap]
           element = neighbourhood.max_by{|x| connections(x, possible, matrix)}
-          # Intentar optimizar en tiempo la forma en la que se comprueba el conjunto en el que está.
           clique << element
           # Delete if swap, update tabu.
           unless possible.include?(element)

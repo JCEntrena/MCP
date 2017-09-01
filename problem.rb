@@ -8,6 +8,7 @@ module Clique
   # nVertices: number of vertices of the graph.
   # nEdges: number of edges of the graph.
   # adjacencyMatrix: adjacency matrix. Contains boolean values.
+  # vertAdjacencies: degrees of each node. 
   class Problem
 
     attr_reader :name

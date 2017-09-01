@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 #encoding: utf-8
 
-# Implementación de técnicas de búsqueda local para trabajar sobre grafos, relativas
-# al problema del clique máximo. Implementaremos los operadores ADD, DROP y SWAP.
 
 require_relative 'problem.rb'
 require_relative 'algorithm.rb'
@@ -19,7 +17,7 @@ module Clique
       @rand = Random.new()
     end
 
-    # Idea from Katayama, Hamamoto, Narihisa
+    # Idea from Katayama, Hamamoto, Narihisa (KLS)
     def solve_with_solution(problem, clique, changes)
       matrix = problem.adjacencyMatrix
       vertices = problem.nVertices
@@ -42,7 +40,7 @@ module Clique
           # Swap or drop
         else
           # Trying swap.
-          # Uso find para una técnica del primer mejor. Así, ahorro calcular.
+          # Find gets first that satisfies condition. Saves computation time.
           candidate = oneMissing.shuffle(random: Random.new(index)).find{|element| aux = swap(new_clique, element, matrix);
                                                    one_connected_with_all(aux, matrix)}
           unless candidate.nil?
@@ -68,17 +66,16 @@ module Clique
       best_clique
     end
 
-    # Método que llama al anterior para resolver.
-    # Puede cambiarse para que use la primera o segunda versión.
+    # Call one of both versions, as required.
     def solve(problem, changes)
       clique = solve_with_solution(problem, [], changes)
       clique
     end
 
-    # Segunda resolución de LS.
-    # Sacado de Grosso, Locatelli, Pullan, del ILS.
-    # Usa elección aleatoria, para ganar velocidad.
-    def solve2(problem, clique, changes)
+    # Second algorithm, DLS.
+    # Idea from Grosso, Locatelli, Pullan.
+    # Random selection.
+    def solve_dynamic(problem, clique, changes)
       # Definitions
       matrix = problem.adjacencyMatrix
       nVert = problem.nVertices
@@ -92,27 +89,26 @@ module Clique
       index = 0
 
       # Stopping when no additions or swaps could be made.
-      # TODO: Comprobar el límite.
       until (pAdditions.empty? and (oneMissing - tabu).empty?) or index > changes
         if !(pAdditions - tabu).empty?
-          # Elección del elemento a añadir: en este caso, tomamos el que tiene más adyacencias.
+          # Chooses randomly.
           element = (pAdditions - tabu)[@rand.rand((pAdditions - tabu).length)]
           my_clique << element
 
         elsif !(oneMissing - tabu).empty?
-          # Elección de los elementos a intercambiar
+          # Chooses randomly
           not_connected = (oneMissing - tabu)[@rand.rand((oneMissing - tabu).length)]
           in_clique = my_clique.find{|x| matrix[x][not_connected] == 0}
           # SWAP
           my_clique.delete(in_clique)
           my_clique << not_connected
           # Forbid node to be added again. We add at the beginning of tabu list.
-          tabu.unshift(not_connected)
+          tabu.unshift(in_clique)
           # Incrementing index.
           index += 1
 
         elsif !pAdditions.empty?
-          # Nuevamente elemento con más adyacencias, pero permitimos tabú.
+          # Allow tabu.
           element = pAdditions[@rand.rand(pAdditions.length)]
           my_clique << element
         end

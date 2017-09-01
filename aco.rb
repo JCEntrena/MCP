@@ -15,8 +15,7 @@ module Clique
       @rand = Random.new()
     end
 
-    # Simple solver.
-    # Idea propia.
+    # Simple solver. My own idea.
     def solve(problem, iterations)
       # Initial declarations
       matrix = problem.adjacencyMatrix
@@ -35,7 +34,7 @@ module Clique
       iterations.times do |i|
         # Best clique in this iteration
         iteration_best = []
-
+        # Ants
         nAnts.times do |j|
           clique = []
           # Pick random vertex.
@@ -50,8 +49,8 @@ module Clique
             # Normalization
             probabilities.map!{|x| x*1.0 / sum}
             # Get element depending on probability.
-            # Comparo el valor aleatorio entre (0, 1) con el valor de la probabilidad.
-            # Si es menor, resto y paso al siguiente.
+            # Comparing random value in (0, 1) with probability.
+            # If smaller, substract and go to next.
             aux = @rand.rand()
             index = 0
             until aux <= probabilities[index]
@@ -61,7 +60,7 @@ module Clique
             # Get element, add to clique.
             element = pAdditions[index]
             clique << element
-            # Get neighbourhood again
+            # Get neighbourhood again.
             pAdditions = connected_with_all(clique, matrix)
           end
 
@@ -130,8 +129,8 @@ module Clique
             sum2 = probabilities.inject(:+)
             probabilities.map!{|x| x*1.0 / sum2}
             # Get element depending on probability.
-            # Comparo el valor aleatorio entre (0, 1) con el valor de la probabilidad.
-            # Si es menor, resto y paso al siguiente.
+            # Comparing random value in (0, 1) with probability.
+            # If smaller, substract and go to next.
             aux = @rand.rand()
             index = 0
             until aux <= probabilities[index]

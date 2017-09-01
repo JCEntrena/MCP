@@ -26,12 +26,12 @@ module Clique
     # Reads
     def readerMethod
 
-      Dir.foreach('./partialdata') do |item|
+      Dir.foreach('./data') do |item|
         # Not working over '.' and '..'
         next if item == '.' or item == '..'
         # Working on real data files.
         # Opening the file in data/file
-        file = File.new('./partialdata/' + item, "r")
+        file = File.new('./data/' + item, "r")
         while (line = file.gets)
           next if line[0] == 'c'
           if line[0] == 'p'
@@ -64,16 +64,17 @@ module Clique
 
     end
 
+    # Main. Change if necessary.
     def main
       readerMethod
-      @solver = SA.new
+      @solver = LocalSearch.new
       @problems.each do |problem|
         puts problem.name
         STDERR.puts problem.name
         clique = []
         10.times do
           tiempo = Time.now
-          new_clique = @solver.solve(problem)
+          new_clique = @solver.solve(problem, problem.nVertices)
           if new_clique.length > clique.length
             clique = Array.new(new_clique)
           end

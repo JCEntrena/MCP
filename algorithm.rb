@@ -10,7 +10,7 @@ module Algorithm
   public
 
   #############################
-  # Algoritmos para realizar movimientos add, swap y drop. Con copia para evitar problemas con referencias
+  # Add, swap and drop.
   #############################
   # ADD
   def add(clique, vertex)
@@ -124,6 +124,11 @@ module Algorithm
 
   # Basic checking method.
   def is_clique(list, matrix)
+    # Uniq is here just to avoid repeating nodes. It shouldn't happen in practice.
+    if list != list.uniq
+      return false
+    end
+    # Actual checking method.
     list.each do |x|
       list.each do |y|
         if matrix[x][y] == 0
@@ -134,6 +139,7 @@ module Algorithm
     true
   end
 
+  # Printing issues. 
   def print_solution(clique, matrix)
     aux = Array.new(clique)
     puts "#{is_clique(aux, matrix)}"

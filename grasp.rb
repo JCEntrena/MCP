@@ -38,8 +38,7 @@ module Clique
     end
 
     public
-    # Resuelve mediante greedy aleatorizado.
-    # Idea propia, básica de GRASP.
+    # Solver. 
     def solve(problem, iterations)
       matrix = problem.adjacencyMatrix
       nVert = problem.nVertices
@@ -48,7 +47,7 @@ module Clique
       # Loop
       iterations.times do
         solution = generate_random_solution(problem)
-        solution = @ls.solve2(problem, solution, limit)
+        solution = @ls.solve_with_solution(problem, solution, limit)
         if solution.length > best_clique.length
           best_clique = Array.new(solution)
         end
